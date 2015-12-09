@@ -1,10 +1,11 @@
-//Final V3.cpp
+//TicTacToe_v3.cpp
 //
-//Tic-Tac-Toe Game
+//Tic-Tac-Toe Game (Option 3)
 //Computer Science 340
 //Los Angeles Harbor College
 //Written by Horacio Santoyo
-//	12/07/15 - First draft
+//	12/06/15 - First draft
+//	12/09/15 - Completed
 
 #include <iostream>
 #include <cstdlib>
@@ -36,15 +37,15 @@ int main ()
 {
 	//Declare variables
 	int player, counter, result, gameType;
-	string player1, player2, playerName, marker, continu;
+	string player1, player2, playerName, marker, continu, choice;
 
 	splash();
 
-	gameType = menu();
+	gameType = menu(); //Choose between the three game types
 
 	while (gameType != 4)	
 	{
-		if (gameType == 1)
+		if (gameType == 1) //human against human
 		{
 			player = 1;
 			player1 = user(1);
@@ -64,7 +65,7 @@ int main ()
 			string bigArray[15][12];
 			resetBigArray(bigArray);
 
-			if(gameType != 1)
+			if(gameType != 1) //human against computer
 				player = pickSide();
 
 			whichGrid(gameType, gameArray, bigArray);
@@ -81,8 +82,6 @@ int main ()
 
 			while (counter < 9)
 			{
-				string choice;
-
 				if(gameType == 1)
 				{
 					choice = playerMove();
@@ -104,11 +103,11 @@ int main ()
 				
 				if(checkPosition(choice, gameArray) == true)
 				{
-				processAnswer(player, marker, counter, choice, gameArray, gameArrayHidden);
-				updateBigArray(choice, marker, bigArray);
-				result = checkWin(counter, gameArray);
+					processAnswer(player, marker, counter, choice, gameArray, gameArrayHidden);
+					updateBigArray(choice, marker, bigArray);
+					result = checkWin(counter, gameArray);
 
-					if(result == 1)
+					if(result == 1) //If win
 					{
 						whichGrid(gameType, gameArray, bigArray);
 						
@@ -123,10 +122,9 @@ int main ()
 							else
 								cout << "The computer won!\nGame over!  Play again? y/n\n";
 						}
-
-							counter = 9;
+							counter = 9; //set counter to 9 so we can exit loop
 					}
-					else if (result == 2)
+					else if (result == 2) //If tie
 					{
 						whichGrid(gameType, gameArray, bigArray);
 						cout << "It's a tie!\nGame over!  Play again? y/n\n";
@@ -154,14 +152,13 @@ int main ()
 			}
 			getline(cin, continu);
 
-			while(continu != "n" && continu != "y")
+			while(continu != "n" && continu != "y" && continu != "N" && continu != "Y")
 			{
 				whichGrid(gameType, gameArray, bigArray);
 				cout << "Invalid entry\n";
 				cout << "Game over!  Play again? y/n\n";
 				getline(cin, continu);				
 			}
-
 		}
 
 	gameType = menu();
@@ -206,7 +203,7 @@ int menu()
 
 	getline(cin,input);
 
-	while (validateUserInput(4, input) != 0)
+	while (validateUserInput(4, input) != 0 || atoi(input.c_str()) > 4)
 	{
 		cout << "Please enter a valid choice\n";
 		getline(cin,input);
@@ -290,7 +287,7 @@ int pickSide()
 
 	getline(cin,input);
 
-	while (validateUserInput(3, input) != 0)
+	while (validateUserInput(3, input) != 0 || atoi(input.c_str()) > 2)
 	{
 		cout << "Please enter a valid choice\n";
 		getline(cin,input);
@@ -364,16 +361,14 @@ void processAnswer(int player, string marker, int &counter, string position, str
 
 int checkWin(int counter, string gameArray[])
 {
-/*	
-		|-----|
-        |0|1|2|
-		|-----|
-        |3|4|5|
-		|-----|
-        |6|7|8|
-		|-----|
 
-*/
+//	|-----|
+//	|0|1|2|
+//	|-----|
+//	|3|4|5|
+//	|-----|
+//	|6|7|8|
+//	|-----|
 
 if(	
 	(gameArray[0] == gameArray[3] && gameArray[0] == gameArray[6]) ||
@@ -609,8 +604,7 @@ void displayBigArray(string bigArray[][12])
 void updateBigArray(string choice, string marker, string bigArray[][12])
 {
 
-	int i = atoi(choice.c_str());
-	int c, r;
+	int c, r, i = atoi(choice.c_str());
 
 	if(i == 1 || i == 2 || i == 3)
 		r = 0;
@@ -698,6 +692,12 @@ string computerMove(int counter, int gameArrayHidden[])
 {
 	string choice;
 	int position;
+
+	// Algorithm will use following priority
+	// 1. check if computer has winning move on current play
+	// 2. check if player has winning move on next play, so we can block them
+	// 3. use offensive/defensive moves
+	// 4. play random position
 
     //Check if human has two positions in a row/column/diagonal so we can block the third position
     if (gameArrayHidden[0] + gameArrayHidden[1] + gameArrayHidden[2] == 2)
@@ -790,7 +790,7 @@ string computerMove(int counter, int gameArrayHidden[])
     }
     else
     {
-    	//Human does not have two positions in a row/column/diagonal
+    	//If human does not have two positions in a row/column/diagonal, then select random position
         for (int i = 0; i < 9; ++i)
         {
             if (gameArrayHidden[i] == 0)
@@ -923,9 +923,9 @@ string computerMove(int counter, int gameArrayHidden[])
         {
 	       	unsigned seed = unsigned(time(0));
 			srand(seed);
-			int ii = (rand() % 3) + 1;
+			int i = (rand() % 3) + 1;
 
-			switch(ii)
+			switch(i)
 			{
 				case 1:
 			        if (gameArrayHidden[4] == 0)
