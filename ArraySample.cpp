@@ -7,15 +7,15 @@ using namespace std;
 
 void resetBigArray(string bigArray[][12]);
 void displayBigArray(string bigArray[][12]);
-void updateBigArray(string choice, int player, string bigArray[][12]);
+void updateBigArray(string choice, string marker, string bigArray[][12]);
 
 int main()
 {
     string bigArray[15][12];
     int counter = 0;
     int player = 1;
+    string marker = "X";
 	resetBigArray(bigArray);
-
 	displayBigArray(bigArray);
 
 	while(counter < 9)
@@ -25,19 +25,25 @@ int main()
 		cout << "Make a move!\n";
 		getline(cin,input);
 
-		updateBigArray(input, player, bigArray);
+		updateBigArray(input, marker, bigArray);
 		
 		if(player == 1)
+		{
 			player = 2;
+			marker = "O";
+		}
 		else
+		{
 			player = 1;
+			marker = "X";
+		}
 
 		system("CLS");
 		displayBigArray(bigArray);
 		counter++;
 	}
 
-	cout << "Good bye!";
+	cout << "Good bye!\n";
 	system("pause");
 	return 0;
 }
@@ -189,6 +195,7 @@ void displayBigArray(string bigArray[][12])
 
 
 //Update big array with 'X' or 'O' on player's chosen position after each move
+
 void updateBigArray(string choice, string marker, string bigArray[][12])
 {
 
